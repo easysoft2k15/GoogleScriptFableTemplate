@@ -1,0 +1,5 @@
+packages/
+GoogleScriptTemplate/bin/
+GoogleScriptTemplate/obj/
+GoogleScriptTemplate/Fable/node_modules
+GoogleScriptTemplate/Fable/out
