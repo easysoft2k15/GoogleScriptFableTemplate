@@ -33,19 +33,19 @@
 open Fable.Core
 open GoogleAppsScript
 
-let rec ToList (fi: FileIterator)=
-    let mutable l=[]
-    while(fi.hasNext()) do
-        l <- fi.next()::l
-    l
+type FileIterator with
+    member x.ToList()=
+        let mutable l=[]
+        while(x.hasNext()) do
+            l <- x.next()::l
+        l
 
 let testArray()=
     [1..10]
     |> List.map (fun i -> Globals.Logger.log i)
 
 let getDriveFiles()=
-    Globals.DriveApp.getFiles()
-    |> ToList
+    Globals.DriveApp.getFiles().ToList()
     |> List.map (fun f -> Globals.Logger.log (f.getName()))
 
 testArray();
