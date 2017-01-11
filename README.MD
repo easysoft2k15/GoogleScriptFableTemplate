@@ -70,7 +70,7 @@ function myFunction() {
 ```
 
 ### NOTE 3: some opinionable changed ......
-1. in fable-core.ts I changed "catch" => "GAS_catch" due to Google Script compleining with name resolution:
+1. in fable-core.ts I changed "catch" => "GAS_catch" due to Google Script complaining with name resolution:
   static awaitPromise<T>(p: Promise<T>) {
     return Async.fromContinuations((conts: Array<Continuation<T>>) =>
       p.then(conts[0]).GAS_catch(err =>
