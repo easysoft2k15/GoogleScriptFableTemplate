@@ -1,6 +1,6 @@
 ﻿**Disclaimer: I just start testing and I only made this little program compile and run. So don't blame me if everything blow up!!**
 
-## MODIFY AND COMPILE fable-core.ts
+### MODIFY AND COMPILE fable-core.ts
 1. Install Babel
 npm i babel-cli --global
 2.  Install Babel UMD Transform:
@@ -8,6 +8,7 @@ npm install --save-dev babel-plugin-transform-es2015-modules-umd
 3. Modify fable-core.ts in order to get rid of duplicate name. All modified name have been prefixed with "GAS_".
 Moreover the function "fableGlobal" has been modify to return "this" instead of null at the very end.
 4. compile fable-core-ts with the following setup
+```
 ///tsconfig.json
 {
     "compilerOptions": {
@@ -20,18 +21,18 @@ Moreover the function "fableGlobal" has been modify to return "this" instead of 
         "fable-core.ts"
     ]
 }
-
-## GET THE NECESSARY POLYFILL (Google Script are not es6 compatible)
+```
+### GET THE NECESSARY POLYFILL (Google Script are not es6 compatible)
 1. Install Babel polyfill:
 npm install --save-dev babel-polyfill
 2. Grab the file polyfill.js on the "babel-polyfill\babel-polyfill\disp" folder
 
-## CREATE THE GOOGLE APP FUNCTION
+### CREATE THE GOOGLE APP FUNCTION
 1. Post-process the resulting polyfill.js and fable-core.js with Babel:
 babel polyfill.js fable-core.js --plugins babel-plugin-transform-es2015-modules-umd -o fable-core-umd.js
 2. Simply copy past content of "fable-core-umd.js"
 
-## VISUAL STUDIO 2015 SETUP
+### VISUAL STUDIO 2015 SETUP
 1. Grab Google Script type definition (TypeScript) from: https://github.com/DefinitelyTyped/DefinitelyTyped
 2. Install ts2Fable package:
 npm i ts2fable --global
