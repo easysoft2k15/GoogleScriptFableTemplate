@@ -1,9 +1,12 @@
 {
-    "module": "umd",
+    //"module": "umd",
     "sourceMaps": true,
     "projFile": "./MyScript.fsx",
-    "outDir": "out",
+	"babelPlugins": ["transform-runtime"],
     "scripts": {
-        "prebuild": "npm install"
-    }
+        "postbuild": "node post-process.js ./out/bundle.js ./out/bundle-patch.js"
+    },
+	"rollup": {
+        "dest": "./out/bundle.js"
+	}
 }
