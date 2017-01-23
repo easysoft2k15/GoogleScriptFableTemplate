@@ -1,88 +1,52 @@
 ﻿**Disclaimer: I just start testing and I only made this little program compile and run. So don't blame me if everything blow up!!**
 
-### MODIFY AND COMPILE fable-core.ts
-1. Install Babel
-npm i babel-cli --global
-2.  Install Babel UMD Transform:
-npm install --save-dev babel-plugin-transform-es2015-modules-umd
-3. Modify fable-core.ts in order to get rid of duplicate name. All modified name have been prefixed with "GAS_".
-Moreover the function "fableGlobal" has been modify to return "this" instead of null at the very end.
-4. compile fable-core-ts with the following setup
+### Setup npm package
+1. Install npm package
 ```
-///tsconfig.json
-{
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "noImplicitAny": true,
-        "noImplicitReturns": true
-    },
-    "files": [
-        "fable-core.ts"
-    ]
-}
+npm install
 ```
-### GET THE NECESSARY POLYFILL (Google Script are not es6 compatible)
-1. Install Babel polyfill:
-npm install --save-dev babel-polyfill
-2. Grab the file polyfill.js on the "babel-polyfill\babel-polyfill\disp" folder
+### Write Your .fsx FSharp file and compile it
+1. Grab the resulting bundle-patch.js
+2. Please make sure globalObj is set to ```{}``` in the generated code (```Window```, ```global``` and ```self``` are not defined in Google Script):
+```
+var fableGlobal = function () {
+    var globalObj = typeof window !== "undefined" ? window
+        : (typeof global !== "undefined" ? global
+            : (typeof self !== "undefined" ? self : {}));
+```
+Newer version of Fable should take care of this
 
-### CREATE THE GOOGLE APP FUNCTION
-1. Post-process the resulting polyfill.js and fable-core.js with Babel:
-babel polyfill.js fable-core.js --plugins babel-plugin-transform-es2015-modules-umd -o fable-core-umd.js
-2. Simply copy past content of "fable-core-umd.js"
+### Setup Google Script
+1. Create a function in Google Script and past the code from bundle-patch.js
+2. Include the library with the necessary polyfill. You may use the one a created (key: ```M726KwLBDta3Y_kNftg3RGylHpT6My3TR```) or build Your own.
+   Please note that here the generated bundle-patch.js assume that You imported the library in Your Google Script with the prefix  ``` polyfill ```
 
-### VISUAL STUDIO 2015 SETUP
+
+### VISUAL STUDIO 2015 SETUP (this is already done in this project)
 1. Grab Google Script type definition (TypeScript) from: https://github.com/DefinitelyTyped/DefinitelyTyped
 2. Install ts2Fable package:
+```
 npm i ts2fable --global
+```
 3. Convert *.d.ts type file
 3. Include converted .fs file into the VS2015 project
 
 ### NOTE 1:
-If You want to use my library You will find it with the following key: 
- MJ8B3G3tARrY3vnr-flBBaylHpT6My3TR
-
-### NOTE 2: 
-Please remember to change "this" -> "fableCore" (o whatever is the name of the library You are using) in Fable generated code:
+If You want to create Your own polyfill library You may do it like this:
 ```
-function myFunction() {
-(function (global, factory) {
-    if (typeof define === "function" && define.amd) {
-        define(["fable-core"], factory);
-    } else if (typeof exports !== "undefined") {
-        factory(require("fable-core"));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(global.fableCore);
-        global.MyScript = mod.exports;
-    }
-})(fableCore, function (_fableCore) {
-    "use strict";
-
-    _fableCore.List.map(function (i) {
-        return Logger.log(i);
-    }, _fableCore.Seq.toList(_fableCore.Seq.range(1, 10)));
-});
-}
+(function()
+ {
+    var result = UrlFetchApp.fetch('https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.22.0/polyfill.js');
+    eval (result.getContentText());
+ }());
 ```
-
-### NOTE 3: some opinionable changed ......
-1. in fable-core.ts I changed "catch" => "GAS_catch" due to Google Script complaining with name resolution:
-  static awaitPromise<T>(p: Promise<T>) {
-    return Async.fromContinuations((conts: Array<Continuation<T>>) =>
-      p.then(conts[0]).GAS_catch(err =>
-        (err == "cancelled" ? conts[2] : conts[1])(err))); 
 
 __Enjoy!!__
 
 __Thanks to:__
-1. Fable:
-	http://http://fable.io/
-2. For some inspiration:
-	http://ramblings.mcpher.com/Home/excelquirks/gassnips/promisesappsscript
-
+1. [Alonso Garcia](https://www.npmjs.com/~alfonsogarciacaro) for his help and time!
+2. [Fable.io](http://http://fable.io/)
+2. [Bruce Mcpherson](http://ramblings.mcpher.com/Home/excelquirks/gassnips/promisesappsscript) for info on how to write library in Google Script
+	
 
 
