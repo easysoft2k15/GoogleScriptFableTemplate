@@ -44,6 +44,7 @@ If You want to create Your own polyfill library You may do it like this:
 __Enjoy!!__
 
 __Thanks to:__
+
 1. [Alonso Garcia](https://www.npmjs.com/~alfonsogarciacaro) for his help and time!
 
 2. [Fable.io](http://http://fable.io/)
